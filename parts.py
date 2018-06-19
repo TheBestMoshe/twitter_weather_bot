@@ -104,7 +104,7 @@ def weekly_forecast(days=7, keep_below_120c=True):
     return message
 
 
-def hourly_forecast(hours=12, keep_below_120c=True):
+def hourly_forecast(hours=24, keep_below_120c=True, bihourly=True):
     """
     Returns the hourly forecast
 
@@ -122,7 +122,11 @@ def hourly_forecast(hours=12, keep_below_120c=True):
 
         message = f'\n{count} Hour Forecast\n'
 
-        for i in range(count):
+        if bihourly is True:
+            step = 2
+        else:
+            step = 1
+        for i in range(0, count, step):
             time = datetime.datetime.fromtimestamp(hourly_weather[i]['time'])
             time = time.strftime('%I%p')
             # If the hour isn't 10 remove any extra 0
@@ -165,10 +169,10 @@ def hourly_forecast(hours=12, keep_below_120c=True):
 if __name__ == '__main__':
     print(hourly_forecast(keep_below_120c=True))
     print('hourly forecast len: ' + str(len(hourly_forecast(keep_below_120c=False))))
-    print('weekly forecast len: ' + str(len(weekly_forecast(keep_below_120c=False))))
-    print(weekly_forecast(keep_below_120c=True))
-    #tweet(today_weather())
-    #tweet(weekly_forecast(4))
+    # print('weekly forecast len: ' + str(len(weekly_forecast(keep_below_120c=False))))
+    # print(weekly_forecast(keep_below_120c=True))
+    # tweet(today_weather())
+    # tweet(weekly_forecast(4))
     # tweet(hourly_forecast())
 
 print('parts ran')
