@@ -104,13 +104,15 @@ def weekly_forecast(days=7, keep_below_120c=True):
     return message
 
 
-def hourly_forecast(hours=24, keep_below_120c=True, bihourly=True):
+def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
     """
     Returns the hourly forecast
 
     :param hours: Chose how many hours forecast you want the results to be
-    :param keep_below_120c: If set to true, it will keep the charechter count of the
+    :param keep_below_120c: If set to true, it will keep the character count of the
     return message under 120, even if it means less hours.
+    :param bi_hourly: Set to true if forecast should bi bi-hourly. Set to false if it
+    should be hourly.
     :return:
     """
 
@@ -122,7 +124,7 @@ def hourly_forecast(hours=24, keep_below_120c=True, bihourly=True):
 
         message = f'\n{count} Hour Forecast\n'
 
-        if bihourly is True:
+        if bi_hourly is True:
             step = 2
         else:
             step = 1
