@@ -2,6 +2,10 @@
 import parts
 from apscheduler.schedulers.blocking import BlockingScheduler
 import logging
+from api_keys import version
+import time
+
+time.sleep(20)
 
 # Logging needs to be completely rewritten
 logger = logging.getLogger(__name__)
@@ -17,7 +21,7 @@ logger.addHandler(handler)
 sched = BlockingScheduler()
 
 
-@sched.scheduled_job('cron', day_of_week='mon,tue,wed,thu,fri', hour=8)
+@sched.scheduled_job('cron', day_of_week='sun,mon,tue,wed,thu,fri', hour=8)
 def morning_report():
     logger.info('Beginning morning routine')
     logger.info('Sending hourly forecast')
@@ -37,6 +41,6 @@ def evening_report():
 #     parts.tweet(parts.hourly_forecast(1))
 #     print('hourly_forecast ran')
 
+parts.dm('moshe_grunwald', f'{version} version of lkweatherbot has been started')
 logger.info('Starting scheduler')
 sched.start()
-
