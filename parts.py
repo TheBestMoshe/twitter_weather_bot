@@ -31,7 +31,7 @@ def get_weather():
     long = -74.2097014
     api_secret = darksky_api_secret
     api_url = f'https://api.darksky.net/forecast/{api_secret}/{lat},{long}'
-
+    print(api_url)
     raw_data = requests.get(api_url)
     weather = raw_data.json()
 
@@ -51,15 +51,21 @@ def today_weather():
     temp_low = int(today['temperatureLow'])
     real_feel_high = int(today['apparentTemperatureHigh'])
     real_feel_low = int(today['apparentTemperatureLow'])
+    summary = today['summary']
 
-    message = (f'Today\'s Weather:\n'
-               f'{date} \n'
-               f'High: {temp_high}\n'
+    message = (f'High: {temp_high}\n'
                f'Low:  {temp_low}\n'
                f'Chance of rain: {chance_of_rain}%\n'
                f'Feels like:\n'
                f'High: {real_feel_high}\n'
                f'Low: {real_feel_low}')
+
+    # Tries adding the summary to the message
+    if len('Today ' + date + ' ' + summary + message) <= 140:
+        message = 'Today ' + date + ' ' + summary.lower() + '\n' + message
+
+    else:
+        message = 'Today ' + date + message + '\n'
 
     return message
 
@@ -168,14 +174,9 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
 
     return message
 
+
 if __name__ == '__main__':
-    print(hourly_forecast(keep_below_120c=True))
-    print('hourly forecast len: ' + str(len(hourly_forecast(keep_below_120c=False))))
-    # print('weekly forecast len: ' + str(len(weekly_forecast(keep_below_120c=False))))
-    # print(weekly_forecast(keep_below_120c=True))
-    # tweet(today_weather())
-    # tweet(weekly_forecast(4))
-    # tweet(hourly_forecast())
+    tweet(today_weather())
 
 print('parts ran')
 print(__name__)
