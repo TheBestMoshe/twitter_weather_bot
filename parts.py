@@ -46,7 +46,8 @@ def today_weather():
     date = datetime.datetime.fromtimestamp(today['time'])
     date = date.strftime('%a, %b %d')
 
-    chance_of_rain = today['precipProbability']
+    percip_prob = today['precipProbability']
+    percip_type = today['precipType']
     temp_high = int(today['temperatureHigh'])
     temp_low = int(today['temperatureLow'])
     real_feel_high = int(today['apparentTemperatureHigh'])
@@ -55,7 +56,7 @@ def today_weather():
 
     message = (f'High: {temp_high}\n'
                f'Low:  {temp_low}\n'
-               f'Chance of rain: {chance_of_rain}%\n'
+               f'{percip_type.title()}: {percip_prob}%\n'
                f'Feels like:\n'
                f'High: {real_feel_high}\n'
                f'Low: {real_feel_low}')
@@ -83,18 +84,19 @@ def weekly_forecast(days=7, keep_below_120c=True):
             date = datetime.datetime.fromtimestamp(date)
             date = date.strftime('%a, %b %d')
 
-            chance_of_rain = weekly_weather[i]['precipProbability']
-            if chance_of_rain > .30:
-                chance_of_rain = '\nRain:' + str(chance_of_rain) + '%'
+            percip_type = weekly_weather[i]['precipType']
+            percip_prob = weekly_weather[i]['precipProbability']
+            if percip_prob > .30:
+                percip_prob = f'\n{percip_type.title()}: {str(percip_prob)}%'
             else:
-                chance_of_rain = ''
+                percip_prob = ''
 
             temp_high = int(weekly_weather[i]['temperatureHigh'])
             temp_low = int(weekly_weather[i]['temperatureLow'])
 
             message = message + (f'\n{date}\n'
                                  f'{temp_high}/{temp_low}'
-                                 f'{chance_of_rain}\n')
+                                 f'{percip_prob}\n')
         return message
 
     if keep_below_120c is True:
@@ -141,11 +143,12 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
             if '10' not in time:
                 time = time.strip('0')
 
-            chance_of_rain = hourly_weather[i]['precipProbability']
-            if chance_of_rain > .30:
-                chance_of_rain = '\nRain:' + chance_of_rain + '%'
+            percip_type = hourly_weather[i]['precipType']
+            percip_prob = hourly_weather[i]['precipProbability']
+            if percip_prob > .30:
+                percip_prob = f'\n{percip_type.title()}: {percip_prob}%'
             else:
-                chance_of_rain = ''
+                percip_prob = ''
 
             temperature = int(hourly_weather[i]['temperature'])
             feels_like = int(hourly_weather[i]['apparentTemperature'])
@@ -157,7 +160,7 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
             message = message + (f'\n{time}\n'
                                  f'{temperature}\n'
                                  f'{feels_like}'
-                                 f'{chance_of_rain}')
+                                 f'{percip_prob}')
 
         return message
 
@@ -176,7 +179,6 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
 
 
 if __name__ == '__main__':
-    tweet(today_weather())
+    print(today_weather())
 
-print('parts ran')
-print(__name__)
+
