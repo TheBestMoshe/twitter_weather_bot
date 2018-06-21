@@ -33,7 +33,7 @@ def morning_report():
 @sched.scheduled_job('cron', day_of_week='sat,mon,thu', hour=20)
 def evening_report():
     logger.info('sending weekly forecast')
-    parts.tweet(parts.weekly_forecast(5))
+    parts.tweet(parts.weekly_forecast())
 
 
 # @sched.scheduled_job('interval', minutes=1)
