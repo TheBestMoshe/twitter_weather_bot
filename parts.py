@@ -178,7 +178,15 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
     return message
 
 
+def clean_up_weather_percent(percentage):
+    percentage = str(percentage)
+    percentage = percentage.replace('.', '')
+    if percentage[:1] == '0':
+        percentage = percentage[1:]
+    return percentage + '%'
+
+
 if __name__ == '__main__':
-    print(today_weather())
+
 
 
