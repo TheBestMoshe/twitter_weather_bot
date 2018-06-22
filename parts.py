@@ -45,20 +45,18 @@ def today_weather():
     date = datetime.datetime.fromtimestamp(today['time'])
     date = date.strftime('%a, %b %d')
 
-    precip = calculate_percip(today)
+    precip = calculate_percip(today, 0.05)
 
-    temp_high = int(today['temperatureHigh'])
-    temp_low = int(today['temperatureLow'])
-    real_feel_high = int(today['apparentTemperatureHigh'])
-    real_feel_low = int(today['apparentTemperatureLow'])
+    temp = (f'High: {int(round(today["temperatureHigh"]))}\n'
+            f'Low: {int(round(today["temperatureLow"]))}\n')
+    real_feel = (f'High: {int(round(today["apparentTemperatureHigh"]))}\n'
+                 f'Low: {int(round(today["apparentTemperatureLow"]))}\n')
+    if temp != real_feel:
+        message = temp + real_feel + precip
+    else:
+        message = temp + precip
+
     summary = today['summary']
-
-    message = (f'High: {temp_high}\n'
-               f'Low:  {temp_low}\n'
-               f'{precip}'
-               f'Feels like:\n'
-               f'High: {real_feel_high}\n'
-               f'Low: {real_feel_low}')
 
     # Tries adding the summary to the message
     if len('Today ' + date + ' ' + summary + message) <= 140:
