@@ -166,6 +166,14 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
 
 
 def clean_up_weather_percent(percentage):
+    """
+    Reformat DarkSky precipProbability API from a float to a proper string
+
+    DarkSky api gives a float (i.e. 0.25) as a percentage. This function takes the original
+    float and outputs it as a proper string, without extra 0s and '.'s
+    :param percentage: float percentage
+    :return:
+    """
     percentage = str(percentage)
     percentage = percentage.replace('.', '')
     if percentage[:1] == '0':
