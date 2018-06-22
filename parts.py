@@ -52,7 +52,7 @@ def today_weather():
     real_feel = (f'High: {int(round(today["apparentTemperatureHigh"]))}\n'
                  f'Low: {int(round(today["apparentTemperatureLow"]))}\n')
     if temp != real_feel:
-        message = temp + real_feel + precip
+        message = temp + 'Real Feel:\n' + real_feel + precip
     else:
         message = temp + precip
 
@@ -203,8 +203,6 @@ def calculate_percip(weather, sensitivity=0.20):
 
 
 if __name__ == '__main__':
-    print(today_weather())
-    print(hourly_forecast())
-    print(weekly_forecast())
+    tweet(today_weather())
 
 
