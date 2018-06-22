@@ -143,8 +143,13 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
             if '10' not in time:
                 time = time.strip('0')
 
-            percip_type = hourly_weather[i]['precipType']
+            if 'precipType' in hourly_weather[i]:
+                percip_type = hourly_weather[i]['precipType']
+            else:
+                percip_type = None
+
             percip_prob = hourly_weather[i]['precipProbability']
+
             if percip_prob > .30:
                 percip_prob = f'\n{percip_type.title()}: {percip_prob}%'
             else:
@@ -187,6 +192,8 @@ def clean_up_weather_percent(percentage):
 
 
 if __name__ == '__main__':
-
+    print(today_weather())
+    print(hourly_forecast())
+    print(weekly_forecast())
 
 
