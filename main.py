@@ -21,7 +21,7 @@ logger.addHandler(handler)
 sched = BlockingScheduler()
 
 
-@sched.scheduled_job('cron', day_of_week='sun,mon,tue,wed,thu,fri', hour=8)
+@sched.scheduled_job('cron', day_of_week='sun,mon,tue,wed,thu,fri', hour=7)
 def morning_report():
     logger.info('Beginning morning routine')
     logger.info('Sending hourly forecast')
