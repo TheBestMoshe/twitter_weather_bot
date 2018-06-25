@@ -41,6 +41,6 @@ def evening_report():
 #     parts.tweet(parts.hourly_forecast(1))
 #     print('hourly_forecast ran')
 
-parts.dm('moshe_grunwald', f'{version} version of lkweatherbot has been started')
+parts.dm('moshe_grunwald', f'{version} version of LkwdWeatherBot has been started')
 logger.info('Starting scheduler')
 sched.start()
