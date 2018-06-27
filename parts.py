@@ -5,6 +5,7 @@ import requests
 import datetime
 from api_keys import *
 
+# Connect to the Twitter API
 consumer_key = twitter_consumer_key
 consumer_secret = twitter_consumer_secret
 
@@ -27,6 +28,11 @@ def dm(user, message):
 
 
 def get_weather():
+    """
+    Get the weather from DarkSky
+
+    :return: Dictionary with the weather forecast
+    """
     lat = 40.0821290
     long = -74.2097014
     api_secret = darksky_api_secret
@@ -38,6 +44,11 @@ def get_weather():
 
 
 def today_weather():
+    """
+    Today's weather forecast
+
+    :return: Today's weather forecast formatted
+    """
     weather = get_weather()
 
     today = weather['daily']['data'][0]
@@ -69,6 +80,13 @@ def today_weather():
 
 
 def weekly_forecast(days=7, keep_below_120c=True):
+    """
+    Returns the weekly forecast
+
+    :param days: How many days should the forecast be
+    :param keep_below_120c: Set to True if the character count should be under 120
+    :return: The weekly forecast formatted
+    """
     weather = get_weather()
 
     def generate_forecast(count):
@@ -202,7 +220,7 @@ def calculate_percip(weather, sensitivity=0.20):
     return precip
 
 
-if __name__ == '__main__':
-    tweet(today_weather())
+# if __name__ == '__main__':
+
 
 
