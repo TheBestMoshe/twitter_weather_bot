@@ -20,7 +20,13 @@ api = tweepy.API(auth)
 
 
 def tweet(message):
-    api.update_status(message)
+    # Temporarily added tweet version tagging for beta
+    global version
+    if 'beta' in version:
+        version = version
+    else:
+        version = ''
+    api.update_status(version + message)
 
 
 def dm(user, message):
