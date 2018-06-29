@@ -128,7 +128,7 @@ def weekly_forecast(days=7, keep_below_120c=True):
     return message
 
 
-def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
+def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True, scheduler=None):
     """
     Returns the hourly forecast
 
@@ -137,6 +137,7 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
     return message under 120, even if it means less hours.
     :param bi_hourly: Set to true if forecast should bi bi-hourly. Set to false if it
     should be hourly.
+    :param scheduler: Use this to schedule new reports when hourly forecast is to short
     :return:
     """
 
@@ -185,6 +186,12 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True):
                 hours -= 1
     else:
         message = generate_forecast(hours)
+
+    # If it's before 2PM, and the hourly forecast was less than 12 hours, schedule another report.
+    if hours < 12:
+        if scheduler is not None:
+            if datetime.datetime.now().time() < datetime.time(hour=14):
+                scheduler.add_job(hourly_forecast, 'date', run_date=f'{str(datetime.date.today())} 14:00:00')
 
     return message
 
