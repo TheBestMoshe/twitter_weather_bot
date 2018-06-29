@@ -20,6 +20,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
+# Wait until there is a network connection
 network_connection = False
 connection_attempts = 0
 while not network_connection:
@@ -67,6 +68,8 @@ def evening_report():
 
 # Schedule jobs
 scheduler.add_job(morning_report, trigger='cron', day_of_week='mon-fri, sun', hour=7)
+scheduler.add_job(evening_report, trigger='cron', day_of_week='sun, wed', hour=20)
+scheduler.add_job(evening_report, trigger='cron', day_of_week='fri', hour=15)
 
 
 # Send me a DM letting me know that the bot instance has started
