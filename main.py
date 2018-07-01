@@ -10,9 +10,9 @@ import requests
 
 # Logging needs to be completely rewritten
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
-handler = logging.FileHandler('logs.log')
+handler = logging.FileHandler(os.path.dirname(__file__) + '/logs.log')
 handler.setLevel(logging.INFO)
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -26,12 +26,15 @@ connection_attempts = 0
 while not network_connection:
     try:
         connection_attempts += 1
-        logging.info('Testing network connection')
+        logger.info('Testing network connection')
         requests.get('https://google.com')
         network_connection = True
-        logging.info(f'It took {connection_attempts/2} seconds to connect to network.')
+        if connection_attempts == 1:
+            logger.info('Connected to network')
+        else:
+            logger.info(f'It took {connection_attempts/2} seconds to connect to network.')
     except Exception:
-        logging.info('Not connected to the network')
+        logger.info('Not connected to the network')
         time.sleep(2)
 
 
@@ -44,7 +47,7 @@ def morning_report():
     logger.info('Sending hourly forecast')
 
     try:
-        parts.tweet(parts.hourly_forecast())
+        parts.tweet(parts.hourly_forecast(scheduler=scheduler))
     except NameError as e:
         logger.error(f'Error!\n{e}')
     except Exception as e:
@@ -62,20 +65,24 @@ def morning_report():
 
 
 def evening_report():
-    logger.info('sending weekly forecast')
+    logger.info('Sending weekly forecast')
     parts.tweet(parts.weekly_forecast())
 
 
 # Schedule jobs
 scheduler.add_job(morning_report, trigger='cron', day_of_week='mon-fri, sun', hour=7)
 scheduler.add_job(evening_report, trigger='cron', day_of_week='sun, wed', hour=20)
-scheduler.add_job(evening_report, trigger='cron', day_of_week='fri', hour=15)
+scheduler.add_job(evening_report, trigger='cron', day_of_week='fri', hour=14)
 
 
 # Send me a DM letting me know that the bot instance has started
+logger.debug('Sending startup DM')
 parts.dm('moshe_grunwald', f'{version} version of LkwdWeatherBot has been started')
-logger.info('Starting scheduler')
+logger.info('Sent startup DM')
+
+logger.debug('Starting scheduler')
 scheduler.start()
+logger.info('Scheduler started')
 
 # Once we started the scheduler, we will begin checking if the script has been changed
 cwd = os.path.abspath(os.path.dirname(__file__)) + '/'
@@ -86,8 +93,10 @@ watched_files_mtimes = [(f, os.path.getmtime(f)) for f in watched_files]
 while True:
     for f, mtime in watched_files_mtimes:
         if os.path.getmtime(f) != mtime:
-            logging.info('Found changes in the files. Restarting...')
+            logger.info(f'Found changes in {f}.\nRestarting...')
+            # Added this sleep to make sure all the files have been writen to.
+            time.sleep(2)
             os.execv(sys.argv[0], sys.argv)
-
         else:
-            time.sleep(1)
+            time.sleep(2)
+
