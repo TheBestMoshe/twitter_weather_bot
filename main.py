@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.6
-import parts
+from version_1 import parts
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
-from api_keys import version
+from version_1.api_keys import version
 import time
 import os
 import sys
@@ -95,6 +95,8 @@ while True:
         if os.path.getmtime(f) != mtime:
             logger.info(f'Found changes in {f}.\nRestarting...')
             # Added this sleep to make sure all the files have been writen to.
+            # In the past the script would restart while the files were being overwritten
+            # it would crash
             time.sleep(2)
             os.execv(sys.argv[0], sys.argv)
         else:

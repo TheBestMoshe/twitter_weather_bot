@@ -3,7 +3,7 @@
 import tweepy
 import requests
 import datetime
-from api_keys import *
+from version_1.api_keys import *
 
 # Connect to the Twitter API
 consumer_key = twitter_consumer_key
