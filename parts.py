@@ -90,7 +90,8 @@ def weekly_forecast(days=7, keep_below_120c=True):
     Returns the weekly forecast
 
     :param days: How many days should the forecast be
-    :param keep_below_120c: Set to True if the character count should be under 120
+    :param keep_below_120c: Set to True if the character count should be under
+           120
     :return: The weekly forecast formatted
     """
     weather = get_weather()
@@ -128,16 +129,18 @@ def weekly_forecast(days=7, keep_below_120c=True):
     return message
 
 
-def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True, scheduler=None):
+def hourly_forecast(hours=24, keep_below_120c=True,
+                    bi_hourly=True, scheduler=None):
     """
     Returns the hourly forecast
 
     :param hours: Chose how many hours forecast you want the results to be
-    :param keep_below_120c: If set to true, it will keep the character count of the
-    return message under 120, even if it means less hours.
-    :param bi_hourly: Set to true if forecast should bi bi-hourly. Set to false if it
-    should be hourly.
-    :param scheduler: Use this to schedule new reports when hourly forecast is to short
+    :param keep_below_120c: If set to true, it will keep the character count
+           of the return message under 120, even if it means less hours.
+    :param bi_hourly: Set to true if forecast should bi bi-hourly. Set to false
+           if it should be hourly.
+    :param scheduler: Use this to schedule new reports when hourly forecast is
+           to short
     :return:
     """
 
@@ -187,21 +190,27 @@ def hourly_forecast(hours=24, keep_below_120c=True, bi_hourly=True, scheduler=No
     else:
         message = generate_forecast(hours)
 
-    # If it's before 2PM, and the hourly forecast was less than 12 hours, schedule another report.
+    # For some reason this part doesn't work.
+    # If it's before 2PM, and the hourly forecast was less than 12 hours,
+    # schedule another report.
     if hours < 12:
         if scheduler is not None:
             if datetime.datetime.now().time() < datetime.time(hour=14):
-                scheduler.add_job(hourly_forecast, 'date', run_date=f'{str(datetime.date.today())} 14:00:00')
+                scheduler.add_job(hourly_forecast,
+                                  'date',
+                                  run_date=(f'{str(datetime.date.today())} '
+                                            '14:00:00'))
 
     return message
 
 
-def clean_up_weather_percent(percentage):
+def clean_up_weather_percent(percentage, rounded=True):
     """
     Reformat DarkSky precipProbability API from a float to a proper string
 
-    DarkSky api gives a float (i.e. 0.25) as a percentage. This function takes the original
-    float and outputs it as a proper string, without extra 0s and '.'s
+    DarkSky api gives a float (i.e. 0.25) as a percentage. This function takes
+    the original float and outputs it as a proper string, without extra 0s and
+    '.'s
     :param percentage: float percentage
     :return:
     """
@@ -209,6 +218,8 @@ def clean_up_weather_percent(percentage):
     percentage = percentage.replace('.', '')
     if percentage[:1] == '0':
         percentage = percentage[1:]
+    if rounded is True:
+        percentage = str(round(int(percentage), -1))
     return percentage + '%'
 
 
@@ -216,12 +227,13 @@ def calculate_percip(weather, sensitivity=0.20):
     """
     Takes the days weather and checks if there is a chance of rain.
 
-    Calculates the chance of precipitation and the type, and returns it as a sentence
-    if the percentage is over the set amount.
+    Calculates the chance of precipitation and the type, and returns it as a 
+    sentence if the percentage is over the set amount.
     :param weather:Accepts a dictionary of one segment of weather (day or hour)
-    :param sensitivity:Accepts a float to determine how much chance of precipitation is
-    needed to return the chance of precipitation.
-    :return:The complete line of the chance and type of precipitation or nothing
+    :param sensitivity:Accepts a float to determine how much chance of 
+           precipitation is needed to return the chance of precipitation.
+    :return:The complete line of the chance and type of precipitation or
+            nothing
     """
     precip = ''
     if 'precipType' in weather:
