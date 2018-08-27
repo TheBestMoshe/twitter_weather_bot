@@ -99,9 +99,9 @@ def weekly_forecast(days=7, keep_below_120c=True):
     def generate_forecast(count):
         weekly_weather = weather['daily']['data']
 
-        message = f'\n{count} Day Forecast\n'
+        message = f'\n{count-1} Day Forecast\n'
 
-        for i in range(count):
+        for i in range(1, count):
             date = weekly_weather[i]['time']
             date = datetime.datetime.fromtimestamp(date)
             date = date.strftime('%a, %b %d')
