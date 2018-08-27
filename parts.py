@@ -167,7 +167,9 @@ def hourly_forecast(hours=24, keep_below_120c=True,
 
             temperature = int(hourly_weather[i]['temperature'])
             feels_like = int(hourly_weather[i]['apparentTemperature'])
-            if feels_like == temperature:
+            # Only print the feels like if there is at least a two degree
+            # offset.
+            if feels_like in range(temperature - 2, temperature + 2):
                 feels_like = ''
             else:
                 feels_like = 'RF ' + str(feels_like) + '\n'
