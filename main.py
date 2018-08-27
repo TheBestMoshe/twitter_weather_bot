@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.6
-from version_1 import parts
+import parts
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
-from version_1.api_keys import version
+from api_keys import version
 import time
 import os
 import sys
